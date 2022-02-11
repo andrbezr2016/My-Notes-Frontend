@@ -1,7 +1,7 @@
 <template>
   <login v-if="false" />
   <registration v-if="false" />
-  <my-notes />
+  <my-notes v-if="true" />
 </template>
 
 <script>
