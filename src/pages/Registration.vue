@@ -1,22 +1,22 @@
 <template>
-  <div class="min-h-screen bg-gray-700 w-full py-16 px-4">
+  <div class="min-h-screen w-full bg-gray-700 py-16 px-4">
     <div class="flex flex-col items-center justify-center">
-      <div class="flex-col text-6xl text-white font-serif font-bold">
+      <div class="flex-col font-serif text-6xl font-bold text-white">
         My Notes
       </div>
 
       <div
-        class="bg-white shadow rounded lg:w-1/3 md:w-1/2 w-full px-10 pt-2 pb-10 mt-16"
+        class="mt-16 w-full rounded bg-white px-10 pt-2 pb-10 shadow md:w-1/2 lg:w-1/3"
       >
-        <div class="grid grid-cols-2">
+        <div class="flex flex-wrap justify-evenly">
           <p
-            aria-label="Sign in here"
-            class="text-xl font-semibold leading-none text-gray-400 hover:text-gray-800 cursor-pointer py-4"
+            class="cursor-pointer py-4 text-xl font-semibold leading-none text-gray-400 hover:text-gray-800"
+            @click="() => $router.push({ name: 'Login' })"
           >
             Login
           </p>
           <p
-            class="text-xl font-semibold leading-none underline text-gray-800 py-4"
+            class="py-4 text-xl font-semibold leading-none text-gray-800 underline"
           >
             Registration
           </p>
@@ -29,9 +29,9 @@
             Username
           </label>
           <input
-            aria-label="Enter username"
+            v-model="registrationRequest.username"
             type="text"
-            class="bg-gray-200 border-2 rounded focus:outline-none text-xs font-semibold leading-none text-gray-800 py-3 w-full px-3 mt-2"
+            class="focus:outline-none mt-2 w-full rounded border-2 bg-gray-200 py-3 px-3 text-sm font-semibold leading-none text-gray-800"
           />
         </div>
         <div class="mt-2 w-full">
@@ -39,9 +39,9 @@
             Email
           </label>
           <input
-            aria-label="Enter email adress"
+            v-model="registrationRequest.email"
             type="email"
-            class="bg-gray-200 border-2 rounded focus:outline-none text-xs font-semibold leading-none text-gray-800 py-3 w-full px-3 mt-2"
+            class="focus:outline-none mt-2 w-full rounded border-2 bg-gray-200 py-3 px-3 text-sm font-semibold leading-none text-gray-800"
           />
         </div>
         <div class="mt-2 w-full">
@@ -50,11 +50,14 @@
           </label>
           <div class="relative flex items-center justify-center">
             <input
-              aria-label="Enter password"
-              type="password"
-              class="bg-gray-200 border-2 rounded focus:outline-none text-xs font-semibold leading-none text-gray-800 py-3 w-full px-3 mt-2"
+              v-model="registrationRequest.password"
+              :type="passwordVisible ? 'text' : 'password'"
+              class="focus:outline-none mt-2 w-full rounded border-2 bg-gray-200 py-3 pl-3 pr-9 text-sm font-semibold leading-none text-gray-800"
             />
-            <div class="absolute right-0 mt-2 mr-3 cursor-pointer">
+            <div
+              @click="showPassword"
+              class="absolute right-0 mt-2 mr-3 cursor-pointer"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="18"
@@ -75,8 +78,8 @@
         </div>
         <div class="mt-8">
           <button
-            aria-label="Register"
-            class="text-xl font-semibold leading-none text-white focus:outline-none bg-yellow-500 border-2 rounded hover:bg-yellow-400 py-4 w-full"
+            class="focus:outline-none w-full rounded border-2 bg-yellow-500 py-4 text-xl font-semibold leading-none text-white hover:bg-yellow-400"
+            @click="register()"
           >
             Register
           </button>
@@ -87,7 +90,31 @@
 </template>
 
 <script>
+import { registration } from "../api/api.js";
+
 export default {
   name: "Registration",
+
+  data() {
+    return {
+      passwordVisible: false,
+
+      registrationRequest: {
+        username: "",
+        email: "",
+        password: "",
+      },
+    };
+  },
+
+  methods: {
+    register() {
+      registration(this.registrationRequest);
+    },
+
+    showPassword() {
+      this.passwordVisible = !this.passwordVisible;
+    },
+  },
 };
 </script>

@@ -1,30 +1,35 @@
 import axios from "axios";
-import router from "./router";
+import router from "../router";
 import "./axios";
+import { setToken } from "./axios";
 
+// Requests
 
-
-function setToken(response) {
-  sessionStorage.setItem("token", response.data.token);
-  axios.defaults.headers.common["token"] = sessionStorage.getItem("token");
-}
-
-
-// --- Entry ---
-
-export const authenticate = async (form) => {
+export const login = async (data) => {
   try {
-    const response = await axios.post("login", form);
-    routeNext(response);
+    const response = await axios.post("auth/login", data);
+    setToken(response);
+    router.push("/home");
   } catch (e) {
     return e.response.data;
   }
 };
 
-export const registration = async (form) => {
+export const registration = async (data) => {
   try {
-    const response = await axios.post("register", form);
-    routeNext(response);
+    await axios.post("auth/registration", data);
+    router.push("/login");
+  } catch (e) {
+    return e.response.data;
+  }
+};
+
+export const logout = async () => {
+  try {
+    await axios.post("auth/logout");
+    sessionStorage.removeItem("accessToken");
+    sessionStorage.removeItem("refreshToken");
+    router.push("/login");
   } catch (e) {
     return e.response.data;
   }

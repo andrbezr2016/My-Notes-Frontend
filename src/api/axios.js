@@ -1,22 +1,41 @@
-import axios from "axios"
-import router from "./router";
+import axios from "axios";
+import router from "../router";
 
-axios.defaults.baseURL = "http://localhost:8085/";
-axios.defaults.headers.common["token"] = sessionStorage.getItem("token");
+// Default settings
+axios.defaults.baseURL = "http://localhost:8081/";
+axios.defaults.headers.common["Token"] = sessionStorage.getItem("accessToken");
 
+// Response interceptor
+axios.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response.status === 401) {
+      const refreshToken = sessionStorage.getItem("refreshToken");
+      resetToken(refreshToken);
+    }
+    throw error;
+  }
+);
 
-axios.interceptors.response.use(response => {
-  return response;
-}, error => {
-  resetToken();
-  if (error.response.status === 401) {
+async function resetToken(refreshToken) {
+  try {
+    console.log(refreshToken);
+    const response = await axios.get("auth/token", {
+      params: {
+        refreshToken: refreshToken,
+      },
+    });
+    setToken(response);
+  } catch (error) {
     router.push("/login");
   }
+}
 
-  throw error;
-});
-
-function void resetToken() {
-
-	
+export function setToken(response) {
+  sessionStorage.setItem("accessToken", response.data.accessToken);
+  sessionStorage.setItem("refreshToken", response.data.refreshToken);
+  axios.defaults.headers.common["Token"] =
+    sessionStorage.getItem("accessToken");
 }

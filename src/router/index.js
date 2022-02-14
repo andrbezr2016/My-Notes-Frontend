@@ -1,34 +1,36 @@
-import Vue from "vue"
-import Router from "vue-router"
+import { createRouter, createWebHistory } from "vue-router";
 
+import Login from "../pages/Login.vue";
+import Registration from "../pages/Registration.vue";
+import Dashboard from "../pages/Dashboard.vue";
 
-import Login from "../pages/LoginPage.vue"
-
-Vue.use(Router)
-
-const routes = [{
-    path: '/',
+const routes = [
+  {
+    path: "/",
     redirect: {
-      name: 'room'
-    }
+      name: "Login",
+    },
   },
   {
-    path: "/mynotes/*",
-    name: "dashboard",
-    component: MyNotes,
+    path: "/home",
+    name: "Dashboard",
+    component: Dashboard,
   },
   {
     path: "/login",
-    name: "login",
+    name: "Login",
     component: Login,
+  },
+  {
+    path: "/registration",
+    name: "Registration",
+    component: Registration,
   },
 ];
 
-const router = new Router({
-  routes: routes,
-  mode: "history",
-  base: process.env.BASE_URL,
+const router = createRouter({
+  history: createWebHistory(process.env.BASE_URL),
+  routes,
 });
-
 
 export default router;
