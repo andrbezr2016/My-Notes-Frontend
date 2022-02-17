@@ -1,44 +1,7 @@
 <template>
   <div class="min-h-screen bg-white font-semibold text-gray-800">
     <!-- Navigation starts -->
-    <nav class="flex h-20 bg-gray-800 text-white shadow">
-      <div class="flex w-full flex-wrap justify-between px-4">
-        <div class="flex items-center font-serif text-2xl font-bold">
-          My Notes
-        </div>
-        <div class="flex items-center">
-          <div class="flex cursor-pointer items-center">
-            <div
-              class="flex items-center hover:text-yellow-400"
-              @click="visibleUserEdit"
-            >
-              <img
-                class="h-12 w-12 rounded-full object-cover"
-                src="../assets/icon.png"
-                alt="avatar"
-              />
-              <p class="mx-3">{{ user.username }}</p>
-            </div>
-            <svg
-              class="hover:text-yellow-400"
-              @click="logout"
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 96.943 96.943"
-              fill="currentColor"
-            >
-              <path
-                d="M61.168,83.92H11.364V13.025H61.17c1.104,0,2-0.896,2-2V3.66c0-1.104-0.896-2-2-2H2c-1.104,0-2,0.896-2,2v89.623 c0,1.104,0.896,2,2,2h59.168c1.105,0,2-0.896,2-2V85.92C63.168,84.814,62.274,83.92,61.168,83.92z"
-              />
-              <path
-                d="M96.355,47.058l-26.922-26.92c-0.75-0.751-2.078-0.75-2.828,0l-6.387,6.388c-0.781,0.781-0.781,2.047,0,2.828 l12.16,12.162H19.737c-1.104,0-2,0.896-2,2v9.912c0,1.104,0.896,2,2,2h52.644L60.221,67.59c-0.781,0.781-0.781,2.047,0,2.828 l6.387,6.389c0.375,0.375,0.885,0.586,1.414,0.586c0.531,0,1.039-0.211,1.414-0.586l26.922-26.92 c0.375-0.375,0.586-0.885,0.586-1.414C96.943,47.941,96.73,47.433,96.355,47.058z"
-              />
-            </svg>
-          </div>
-        </div>
-      </div>
-    </nav>
+    <header-panel></header-panel>
     <!-- Navigation ends -->
     <!-- Main starts -->
     <div class="grid gap-2 md:grid-cols-3 lg:grid-cols-5">
@@ -46,7 +9,7 @@
       <div class="bg-gray-100 px-4 text-gray-600">
         <div class="my-8 flex-col">
           <div
-            class="focus:outline-none my-2 cursor-pointer leading-none hover:text-yellow-400 hover:underline"
+            class="my-2 cursor-pointer leading-none hover:text-yellow-400 hover:underline focus:outline-none"
             @click="selectCategory('all')"
             :class="{
               'text-yellow-400 underline': selectedMode === 'all',
@@ -55,7 +18,7 @@
             All Notes
           </div>
           <hr class="my-4 bg-gray-400" />
-          <div class="focus:outline-none my-2 leading-none">Categories</div>
+          <div class="my-2 leading-none focus:outline-none">Categories</div>
           <div class="my-2 overflow-y-scroll">
             <ul class="max-h-60">
               <li
@@ -108,14 +71,14 @@
             </ul>
           </div>
           <div
-            class="focus:outline-none my-2 cursor-pointer leading-none hover:text-yellow-400 hover:underline"
+            class="my-2 cursor-pointer leading-none hover:text-yellow-400 hover:underline focus:outline-none"
             @click="visibleCategoryAdd"
           >
             Add Category
           </div>
           <hr class="my-4 bg-gray-400" />
           <div
-            class="focus:outline-none my-2 cursor-pointer leading-none hover:text-yellow-400 hover:underline"
+            class="my-2 cursor-pointer leading-none hover:text-yellow-400 hover:underline focus:outline-none"
             @click="selectCategory('trash')"
             :class="{
               'text-yellow-400 underline': selectedMode === 'trash',
@@ -132,26 +95,12 @@
           <div class="my-4 flex w-full">
             <input
               v-model="filter"
-              class="focus:outline-none flex w-full items-center justify-start rounded border-2 border-gray-100 bg-gray-100 px-3 py-3 text-sm leading-none focus:border-gray-400"
+              class="flex w-full items-center justify-start rounded border-2 border-gray-100 bg-gray-100 px-3 py-3 text-sm leading-none focus:border-gray-400 focus:outline-none"
               type="search"
               placeholder="Search"
             />
             <span class="flex items-center justify-end px-3 text-gray-600">
               <div class="relative flex items-center">
-                <svg
-                  class="w-6 cursor-pointer"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 231 231"
-                  fill="currentColor"
-                >
-                  <g>
-                    <path
-                      d="m198.021,82.5c0-45.563-36.853-82.5-82.417-82.5s-82.625,36.937-82.625,82.5c0,39.734 28.375,72.9 65.375,80.738v67.762h33v-67.564c38-7.452 66.667-40.848 66.667-80.936zm-82.334,49.5c-27.294,0-49.5-22.206-49.5-49.5s22.206-49.5 49.5-49.5 49.5,22.206 49.5,49.5-22.206,49.5-49.5,49.5z"
-                    />
-                  </g>
-                </svg>
                 <svg
                   class="w-6 cursor-pointer"
                   @click="visibleDropdownSort"
@@ -253,19 +202,19 @@
             <button
               @click="addNote"
               v-show="selectedMode !== 'trash'"
-              class="focus:outline-none mb-2 w-full rounded border-2 bg-yellow-500 py-3 font-semibold leading-none text-white hover:bg-yellow-400"
+              class="mb-2 w-full rounded border-2 bg-yellow-500 py-3 font-semibold leading-none text-white hover:bg-yellow-400 focus:outline-none"
             >
               Add
             </button>
             <button
               @click="restoreNote"
               v-show="selectedMode === 'trash'"
-              class="focus:outline-none mb-2 w-full rounded border-2 bg-yellow-500 py-3 font-semibold leading-none text-white hover:bg-yellow-400"
+              class="mb-2 w-full rounded border-2 bg-yellow-500 py-3 font-semibold leading-none text-white hover:bg-yellow-400 focus:outline-none"
             >
               Restore
             </button>
             <button
-              class="focus:outline-none mb-2 w-full rounded border-2 bg-gray-500 py-3 font-semibold leading-none text-white hover:bg-gray-400"
+              class="mb-2 w-full rounded border-2 bg-gray-500 py-3 font-semibold leading-none text-white hover:bg-gray-400 focus:outline-none"
               @click="visibleNoteDelete"
             >
               Delete
@@ -279,7 +228,7 @@
         <div class="flex-col">
           <div class="my-4 flex w-full">
             <input
-              class="focus:outline-none flex w-full items-center justify-start rounded border-2 border-gray-100 bg-gray-100 px-3 py-3 text-sm leading-none focus:border-gray-400"
+              class="flex w-full items-center justify-start rounded border-2 border-gray-100 bg-gray-100 px-3 py-3 text-sm leading-none focus:border-gray-400 focus:outline-none"
               type="text"
               placeholder="Title"
               v-model="currentTitle"
@@ -306,7 +255,7 @@
                 <li
                   class="w-full whitespace-nowrap py-2 px-2 text-sm"
                   :class="{
-                    'text-red-400': currentCategoryTitle === null,
+                    'text-gray-400': currentCategoryTitle === null,
                   }"
                 >
                   Category:
@@ -330,13 +279,13 @@
               type="text"
               placeholder="Content"
               v-model="currentContent"
-              class="focus:outline-none h-full w-full resize-none rounded border-2 border-gray-100 bg-gray-100 px-3 py-3 text-sm leading-none focus:border-gray-400"
+              class="h-full w-full resize-none rounded border-2 border-gray-100 bg-gray-100 px-3 py-3 text-sm leading-none focus:border-gray-400 focus:outline-none"
             ></textarea>
           </div>
           <div class="my-4">
             <button
               @click="editNote"
-              class="focus:outline-none w-full rounded border-2 bg-yellow-500 py-3 font-semibold leading-none text-white hover:bg-yellow-400"
+              class="w-full rounded border-2 bg-yellow-500 py-3 font-semibold leading-none text-white hover:bg-yellow-400 focus:outline-none"
             >
               Save
             </button>
@@ -367,14 +316,15 @@
       @close="visibleCategoryEdit"
       :header="'Edit Category'"
       :message="'Enter the category title:'"
+      :edited="editedCategory.title"
     />
     <select-modal
       v-show="isVisibleCategorySelect"
       @ok="noteCategorySelect"
       @close="visibleCategorySelect"
-      :categories="categories"
       :header="'Select Category'"
       :message="'Select a category for the note:'"
+      :categories="categories"
     />
     <delete-modal
       v-show="isVisibleNoteDelete"
@@ -383,30 +333,23 @@
       :header="'Delete Selected Notes'"
       :message="'Do you want to delete selected notes?'"
     />
-    <edit-user-modal
-      v-show="isVisibleUserEdit"
-      @close="visibleUserEdit"
-      :currentUser="user"
-    />
   </div>
 </template>
 
 <script>
+import HeaderPanel from "./HeaderPanel.vue";
 import EditModal from "../modals/EditModal.vue";
 import DeleteModal from "../modals/DeleteModal.vue";
 import SelectModal from "../modals/SelectModal.vue";
-import EditUserModal from "../modals/EditUserModal.vue";
-
-import { logout } from "../api/api.js";
 
 export default {
   name: "MyNotes",
 
   components: {
+    HeaderPanel,
     EditModal,
     DeleteModal,
     SelectModal,
-    EditUserModal,
   },
 
   data() {
@@ -414,17 +357,6 @@ export default {
       // Temp
       categoryIdCount: 4,
       noteIdCount: 6,
-
-      // User
-      // Temp
-      user: {
-        id: 1,
-        username: "My User",
-        email: "user@mail.com",
-        iconPath: null,
-        createdAt: new Date("2018-02-12"),
-        modifiedAt: new Date("2019-02-12"),
-      },
 
       // Categories
       // Temp
@@ -539,7 +471,6 @@ export default {
       isVisibleCategoryEdit: false,
       isVisibleCategorySelect: false,
       isVisibleNoteDelete: false,
-      isVisibleUserEdit: false,
     };
   },
 
@@ -733,14 +664,6 @@ export default {
 
     visibleNoteDelete() {
       this.isVisibleNoteDelete = !this.isVisibleNoteDelete;
-    },
-
-    visibleUserEdit() {
-      this.isVisibleUserEdit = !this.isVisibleUserEdit;
-    },
-
-    logout() {
-      logout();
     },
   },
 

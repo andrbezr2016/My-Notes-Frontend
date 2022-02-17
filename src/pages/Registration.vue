@@ -11,7 +11,7 @@
         <div class="flex flex-wrap justify-evenly">
           <p
             class="cursor-pointer py-4 text-xl font-semibold leading-none text-gray-400 hover:text-gray-800"
-            @click="() => $router.push({ name: 'Login' })"
+            @click="toLogin"
           >
             Login
           </p>
@@ -31,7 +31,7 @@
           <input
             v-model="registrationRequest.username"
             type="text"
-            class="focus:outline-none mt-2 w-full rounded border-2 bg-gray-200 py-3 px-3 text-sm font-semibold leading-none text-gray-800"
+            class="mt-2 w-full rounded border-2 bg-gray-200 py-3 px-3 text-sm font-semibold leading-none text-gray-800 focus:outline-none"
           />
         </div>
         <div class="mt-2 w-full">
@@ -41,7 +41,7 @@
           <input
             v-model="registrationRequest.email"
             type="email"
-            class="focus:outline-none mt-2 w-full rounded border-2 bg-gray-200 py-3 px-3 text-sm font-semibold leading-none text-gray-800"
+            class="mt-2 w-full rounded border-2 bg-gray-200 py-3 px-3 text-sm font-semibold leading-none text-gray-800 focus:outline-none"
           />
         </div>
         <div class="mt-2 w-full">
@@ -52,7 +52,7 @@
             <input
               v-model="registrationRequest.password"
               :type="passwordVisible ? 'text' : 'password'"
-              class="focus:outline-none mt-2 w-full rounded border-2 bg-gray-200 py-3 pl-3 pr-9 text-sm font-semibold leading-none text-gray-800"
+              class="mt-2 w-full rounded border-2 bg-gray-200 py-3 pl-3 pr-9 text-sm font-semibold leading-none text-gray-800 focus:outline-none"
             />
             <div
               @click="showPassword"
@@ -76,9 +76,16 @@
             </div>
           </div>
         </div>
+        <div class="mt-8 w-full rounded bg-red-400 font-semibold text-white">
+          <ul>
+            <li v-for="(error, index) in errors" :key="index" class="p-2">
+              {{ error }}
+            </li>
+          </ul>
+        </div>
         <div class="mt-8">
           <button
-            class="focus:outline-none w-full rounded border-2 bg-yellow-500 py-4 text-xl font-semibold leading-none text-white hover:bg-yellow-400"
+            class="w-full rounded border-2 bg-yellow-500 py-4 text-xl font-semibold leading-none text-white hover:bg-yellow-400 focus:outline-none"
             @click="register()"
           >
             Register
@@ -104,16 +111,42 @@ export default {
         email: "",
         password: "",
       },
+
+      errors: [],
     };
   },
 
   methods: {
     register() {
-      registration(this.registrationRequest);
+      registration(
+        this.registrationRequest,
+        () => this.$router.push("/login"),
+        (e) => this.parseErrors(e)
+      );
     },
 
     showPassword() {
       this.passwordVisible = !this.passwordVisible;
+    },
+
+    toLogin() {
+      this.$router.push("/login");
+    },
+
+    parseErrors(e) {
+      if (e.response) {
+        for (let i = 0; i < e.response.data.length; i++) {
+          e.response.data[i] =
+            e.response.data[i].field.toUpperCase() +
+            ": " +
+            e.response.data[i].message;
+        }
+        this.errors = e.response.data;
+      } else if (e.request) {
+        this.errors = e.response.data;
+      } else {
+        this.errors = ["Unknown Error"];
+      }
     },
   },
 };

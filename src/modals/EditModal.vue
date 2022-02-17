@@ -1,8 +1,9 @@
 <template>
   <div
+    @click="close"
     class="fixed top-0 min-h-screen w-full bg-gray-700 bg-opacity-90 py-16 px-4"
   >
-    <div class="container mx-auto">
+    <div @click.stop class="container mx-auto">
       <div
         class="mx-auto my-6 mb-4 w-11/12 rounded-md bg-white py-4 px-4 shadow sm:px-10 sm:py-6 md:w-5/12"
       >
@@ -26,17 +27,17 @@
         <p class="text-gray-800">{{ message }}</p>
         <input
           type="text"
-          v-model="title"
-          class="focus:outline-none my-3 w-full rounded border-2 bg-gray-200 px-2 py-2 text-sm leading-none"
+          v-model="editedText"
+          class="my-3 w-full rounded border-2 bg-gray-200 px-2 py-2 text-sm leading-none focus:outline-none"
         />
         <button
-          class="focus:outline-none mt-2 w-full rounded border-2 bg-yellow-500 py-3 font-semibold leading-none text-white hover:bg-yellow-400"
+          class="mt-2 w-full rounded border-2 bg-yellow-500 py-3 font-semibold leading-none text-white hover:bg-yellow-400 focus:outline-none"
           @click="ok"
         >
           Ok
         </button>
         <button
-          class="focus:outline-none mt-2 w-full rounded border-2 bg-gray-500 py-3 font-semibold leading-none text-white hover:bg-gray-400"
+          class="mt-2 w-full rounded border-2 bg-gray-500 py-3 font-semibold leading-none text-white hover:bg-gray-400 focus:outline-none"
           @click="close"
         >
           Cancel
@@ -52,26 +53,33 @@ export default {
 
   data() {
     return {
-      title: "",
+      editedText: "",
     };
   },
 
   props: {
     header: { type: String, required: false, default: "" },
     message: { type: String, required: false, default: "" },
+    edited: { type: String, required: false, default: "" },
   },
 
-  emits: ["ok", "close"],
+  emits: { ok: null, close: null },
 
   methods: {
     ok() {
-      this.$emit("ok", this.title);
-      this.title = "";
+      this.$emit("ok", this.editedText);
+      this.editedText = "";
     },
 
     close() {
       this.$emit("close");
-      this.title = "";
+      this.editedText = "";
+    },
+  },
+
+  watch: {
+    edited() {
+      this.editedText = this.edited;
     },
   },
 };

@@ -1,8 +1,9 @@
 <template>
   <div
+    @click="close"
     class="fixed top-0 min-h-screen w-full bg-gray-700 bg-opacity-90 py-16 px-4"
   >
-    <div class="container mx-auto">
+    <div @click.stop class="container mx-auto">
       <div
         class="mx-auto my-6 mb-4 w-11/12 rounded-md bg-white py-4 px-4 shadow sm:px-10 sm:py-6 md:w-5/12"
       >
@@ -28,13 +29,13 @@
         </div>
         <p class="pb-3 text-gray-800">{{ message }}</p>
         <button
-          class="focus:outline-none mt-2 w-full rounded border-2 bg-yellow-500 py-3 font-semibold leading-none text-white hover:bg-yellow-400"
+          class="mt-2 w-full rounded border-2 bg-yellow-500 py-3 font-semibold leading-none text-white hover:bg-yellow-400 focus:outline-none"
           @click="ok"
         >
           Yes
         </button>
         <button
-          class="focus:outline-none mt-2 w-full rounded border-2 bg-gray-500 py-3 font-semibold leading-none text-white hover:bg-gray-400"
+          class="mt-2 w-full rounded border-2 bg-gray-500 py-3 font-semibold leading-none text-white hover:bg-gray-400 focus:outline-none"
           @click="close"
         >
           No
@@ -53,7 +54,7 @@ export default {
     message: { type: String, required: false, default: "" },
   },
 
-  emits: ["ok", "close"],
+  emits: { ok: null, close: null },
 
   methods: {
     ok() {

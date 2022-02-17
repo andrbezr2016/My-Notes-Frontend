@@ -34,9 +34,9 @@
           Username
         </label>
         <input
-          v-model="username"
+          v-model="editedUser.username"
           type="text"
-          class="focus:outline-none mt-2 w-full rounded border-2 bg-gray-200 py-3 px-3 text-sm font-semibold leading-none text-gray-800"
+          class="mt-2 w-full rounded border-2 bg-gray-200 py-3 px-3 text-sm font-semibold leading-none text-gray-800 focus:outline-none"
         />
       </div>
       <div class="mt-2 w-full">
@@ -45,9 +45,9 @@
         </label>
         <input
           disabled
-          :value="email"
+          :value="currentUser.email"
           type="email"
-          class="focus:outline-none mt-2 w-full rounded border-2 bg-gray-200 py-3 px-3 text-sm font-semibold leading-none text-gray-800"
+          class="mt-2 w-full rounded border-2 bg-gray-200 py-3 px-3 text-sm font-semibold leading-none text-gray-800 focus:outline-none"
         />
       </div>
       <div class="mt-2 w-full">
@@ -56,11 +56,14 @@
         </label>
         <div class="relative flex items-center justify-center">
           <input
-            v-model="password"
-            type="password"
-            class="focus:outline-none mt-2 w-full rounded border-2 bg-gray-200 py-3 pl-3 pr-9 text-sm font-semibold leading-none text-gray-800"
+            v-model="editedUser.password"
+            :type="passwordVisible ? 'text' : 'password'"
+            class="mt-2 w-full rounded border-2 bg-gray-200 py-3 pl-3 pr-9 text-sm font-semibold leading-none text-gray-800 focus:outline-none"
           />
-          <div class="absolute right-0 mt-2 mr-3 cursor-pointer">
+          <div
+            @click="showPassword"
+            class="absolute right-0 mt-2 mr-3 cursor-pointer"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="18"
@@ -79,14 +82,29 @@
           </div>
         </div>
       </div>
+      <div class="mt-8 w-full rounded bg-red-400 font-semibold text-white">
+        <ul>
+          <li v-for="(error, index) in errors" :key="index" class="p-2">
+            {{ error }}
+          </li>
+        </ul>
+      </div>
+      <div
+        v-show="isUpdated"
+        class="mt-8 w-full rounded bg-green-400 font-semibold text-white"
+      >
+        <p class="p-2">Updated</p>
+      </div>
       <div class="mt-8">
         <button
-          class="focus:outline-none mt-2 w-full rounded border-2 bg-gray-500 py-4 font-semibold leading-none text-white hover:bg-gray-400"
+          @click="upload"
+          class="mt-2 w-full rounded border-2 bg-gray-500 py-4 font-semibold leading-none text-white hover:bg-gray-400 focus:outline-none"
         >
           Upload profile picture
         </button>
         <button
-          class="focus:outline-none mt-2 w-full rounded border-2 bg-yellow-500 py-4 font-semibold leading-none text-white hover:bg-yellow-400"
+          @click="save"
+          class="mt-2 w-full rounded border-2 bg-yellow-500 py-4 font-semibold leading-none text-white hover:bg-yellow-400 focus:outline-none"
         >
           Save
         </button>
@@ -96,29 +114,94 @@
 </template>
 
 <script>
+import { editCurrentUser } from "../api/api.js";
+
 export default {
   name: "EditUserModal",
 
   data() {
     return {
-      username: this.currentUser.username,
-      email: this.currentUser.email,
-      password: "",
+      passwordVisible: false,
+
+      editedUser: { username: this.currentUser.username, password: null },
+      icon: null,
+
+      updatedUser: this.currentUser,
+      isUpdated: false,
+
+      errors: [],
     };
   },
 
   props: { currentUser: { type: Object, required: true } },
 
-  emits: ["close"],
+  emits: { update: null, close: null },
 
   methods: {
     close() {
+      this.editedUser.username = this.currentUser.username;
+      this.editedUser.password = null;
+      this.isUpdated = false;
+      this.errors = [];
       this.$emit("close");
     },
 
-    save() {},
+    showPassword() {
+      this.passwordVisible = !this.passwordVisible;
+    },
+
+    save() {
+      if (this.editedUser.password === "") {
+        this.editedUser.password = null;
+      }
+      if (
+        this.editedUser.username === this.currentUser.username &&
+        this.editedUser.password === null
+      ) {
+        this.isUpdated = false;
+        this.errors = [];
+        return;
+      }
+      editCurrentUser(
+        this.editedUser,
+        this.icon,
+        (data) => {
+          this.updatedUser = data;
+          this.$emit("update", this.updatedUser);
+          this.isUpdated = true;
+          this.errors = [];
+        },
+        (e) => {
+          this.isUpdated = false;
+          this.parseErrors(e);
+        }
+      );
+    },
 
     upload() {},
+
+    parseErrors(e) {
+      if (e.response) {
+        for (let i = 0; i < e.response.data.length; i++) {
+          e.response.data[i] =
+            e.response.data[i].field.toUpperCase() +
+            ": " +
+            e.response.data[i].message;
+        }
+        this.errors = e.response.data;
+      } else if (e.request) {
+        this.errors = e.response.data;
+      } else {
+        this.errors = ["Unknown Error"];
+      }
+    },
+  },
+
+  watch: {
+    currentUser() {
+      this.editedUser.username = this.currentUser.username;
+      this.editedUser.password = null;
+    },
   },
 };
 </script>
