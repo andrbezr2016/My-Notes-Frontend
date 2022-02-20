@@ -101,7 +101,7 @@
       <div class="mt-8">
         <label
           :class="{ 'bg-gray-200': icon !== null }"
-          class="focus:outline-none flex h-32 w-full flex-col rounded border-4 border-dashed hover:border-gray-400 hover:bg-gray-200"
+          class="focus:outline-none flex h-32 w-full flex-col rounded border-4 border-dashed transition-colors hover:border-gray-400 hover:bg-gray-200"
         >
           <div class="flex flex-col items-center justify-center pt-7">
             <svg
@@ -128,7 +128,7 @@
         </label>
         <button
           @click="save"
-          class="focus:outline-none mt-2 w-full rounded border-2 bg-yellow-500 py-4 font-semibold leading-none text-white hover:bg-yellow-400"
+          class="focus:outline-none mt-2 w-full rounded border-2 bg-yellow-500 py-4 font-semibold leading-none text-white transition-colors hover:bg-yellow-400"
         >
           Save
         </button>

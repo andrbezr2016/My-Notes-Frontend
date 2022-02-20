@@ -196,6 +196,7 @@
                     v-model="selectedNoteIds"
                     :value="note.id"
                     type="checkbox"
+                    class="h-4 w-4"
                   />
                 </div>
               </li>
@@ -205,7 +206,7 @@
             <button
               @click="addNote"
               v-show="selectedMode !== 'trash'"
-              class="focus:outline-none w-full rounded border-2 bg-yellow-500 py-3 font-semibold leading-none text-white hover:bg-yellow-400"
+              class="focus:outline-none w-full rounded border-2 bg-yellow-500 py-3 font-semibold leading-none text-white transition-colors hover:bg-yellow-400"
             >
               Add
             </button>
@@ -216,7 +217,7 @@
               :class="{
                 'cursor-not-allowed': !selectedNoteIds.length,
               }"
-              class="focus:outline-none w-full rounded border-2 bg-yellow-500 py-3 font-semibold leading-none text-white hover:bg-yellow-400"
+              class="focus:outline-none w-full rounded border-2 bg-yellow-500 py-3 font-semibold leading-none text-white transition-colors hover:bg-yellow-400"
             >
               Restore
             </button>
@@ -226,7 +227,7 @@
               :class="{
                 'cursor-not-allowed': !selectedNoteIds.length,
               }"
-              class="focus:outline-none w-full rounded border-2 bg-gray-500 py-3 font-semibold leading-none text-white hover:bg-gray-400"
+              class="focus:outline-none w-full rounded border-2 bg-gray-500 py-3 font-semibold leading-none text-white transition-colors hover:bg-gray-400"
             >
               Delete
             </button>
@@ -299,7 +300,7 @@
           <div v-show="selectedMode !== 'trash'" class="my-4">
             <button
               @click="editNote"
-              class="focus:outline-none w-full rounded border-2 bg-yellow-500 py-3 font-semibold leading-none text-white hover:bg-yellow-400"
+              class="focus:outline-none w-full rounded border-2 bg-yellow-500 py-3 font-semibold leading-none text-white transition-colors hover:bg-yellow-400"
             >
               Save
             </button>

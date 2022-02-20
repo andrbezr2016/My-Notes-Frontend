@@ -40,13 +40,13 @@
         </select>
 
         <button
-          class="focus:outline-none mt-2 w-full rounded border-2 bg-yellow-500 py-3 font-semibold leading-none text-white hover:bg-yellow-400"
+          class="focus:outline-none mt-2 w-full rounded border-2 bg-yellow-500 py-3 font-semibold leading-none text-white transition-colors hover:bg-yellow-400"
           @click="ok"
         >
           Ok
         </button>
         <button
-          class="focus:outline-none mt-2 w-full rounded border-2 bg-gray-500 py-3 font-semibold leading-none text-white hover:bg-gray-400"
+          class="focus:outline-none mt-2 w-full rounded border-2 bg-gray-500 py-3 font-semibold leading-none text-white transition-colors hover:bg-gray-400"
           @click="close"
         >
           Cancel

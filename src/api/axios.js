@@ -61,7 +61,7 @@ axios.interceptors.response.use(
       const refreshToken = getRefreshToken();
       return resetToken(refreshToken, requestConfig);
     }
-    return error;
+    throw error;
   }
 );
 
