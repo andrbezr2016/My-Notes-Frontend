@@ -1,15 +1,17 @@
 <template>
-  <div class="min-h-screen bg-white font-semibold text-gray-800">
+  <div
+    class="flex h-screen max-h-screen flex-col bg-white font-semibold text-gray-800"
+  >
     <!-- Navigation starts -->
     <header-panel></header-panel>
     <!-- Navigation ends -->
     <!-- Main starts -->
-    <div class="grid gap-2 md:grid-cols-3 lg:grid-cols-5">
+    <div class="grid h-full flex-grow gap-2 md:grid-cols-3 lg:grid-cols-5">
       <!-- Left starts -->
-      <div class="bg-gray-100 px-4 text-gray-600">
-        <div class="my-8 flex-col">
+      <div class="h-full bg-gray-100 px-4 text-gray-600">
+        <div class="my-8 flex flex-col">
           <div
-            class="my-2 cursor-pointer leading-none hover:text-yellow-400 hover:underline focus:outline-none"
+            class="focus:outline-none my-2 cursor-pointer leading-none hover:text-yellow-400 hover:underline"
             @click="selectCategory('all')"
             :class="{
               'text-yellow-400 underline': selectedMode === 'all',
@@ -18,9 +20,9 @@
             All Notes
           </div>
           <hr class="my-4 bg-gray-400" />
-          <div class="my-2 leading-none focus:outline-none">Categories</div>
+          <div class="focus:outline-none my-2 leading-none">Categories</div>
           <div class="my-2 overflow-y-scroll">
-            <ul class="max-h-60">
+            <ul class="max-h-80">
               <li
                 v-for="category in categories"
                 :key="category.id"
@@ -30,7 +32,8 @@
                   class="flex cursor-pointer items-center justify-start overflow-hidden hover:text-yellow-400 hover:underline"
                   @click="selectCategory('categories', category)"
                   :class="{
-                    'text-yellow-400 underline': selectedCategory === category,
+                    'text-yellow-400 underline':
+                      selectedCategory.id === category.id,
                   }"
                 >
                   {{ category.title }}
@@ -71,14 +74,14 @@
             </ul>
           </div>
           <div
-            class="my-2 cursor-pointer leading-none hover:text-yellow-400 hover:underline focus:outline-none"
+            class="focus:outline-none my-2 cursor-pointer leading-none hover:text-yellow-400 hover:underline"
             @click="visibleCategoryAdd"
           >
             Add Category
           </div>
           <hr class="my-4 bg-gray-400" />
           <div
-            class="my-2 cursor-pointer leading-none hover:text-yellow-400 hover:underline focus:outline-none"
+            class="focus:outline-none my-2 cursor-pointer leading-none hover:text-yellow-400 hover:underline"
             @click="selectCategory('trash')"
             :class="{
               'text-yellow-400 underline': selectedMode === 'trash',
@@ -90,12 +93,12 @@
       </div>
       <!-- Left ends -->
       <!-- Middle starts -->
-      <div class="px-4">
-        <div class="flex-col">
+      <div class="h-full px-4">
+        <div class="flex h-full max-h-full flex-col justify-between">
           <div class="my-4 flex w-full">
             <input
               v-model="filter"
-              class="flex w-full items-center justify-start rounded border-2 border-gray-100 bg-gray-100 px-3 py-3 text-sm leading-none focus:border-gray-400 focus:outline-none"
+              class="focus:outline-none flex w-full items-center justify-start rounded border-2 border-gray-100 bg-gray-100 px-3 py-3 text-sm leading-none focus:border-gray-400"
               type="search"
               placeholder="Search"
             />
@@ -176,22 +179,22 @@
               </div>
             </span>
           </div>
-          <div class="my-4 h-80 overflow-y-scroll">
-            <ul class="flex-col text-sm">
-              <li v-for="note in sortedNotes" :key="note.id" class="m-2 flex">
+          <div class="my-4 h-full max-h-full">
+            <ul class="flex h-96 flex-col overflow-y-scroll text-sm">
+              <li v-for="note in sortedNotes" :key="note.id" class="m-1 flex">
                 <div
                   @click="selectNote(note)"
                   :class="{
-                    'bg-gray-400 text-white': selectedNote === note,
+                    'bg-gray-400 text-white': selectedNote.id === note.id,
                   }"
-                  class="flex w-full cursor-pointer items-center justify-start overflow-hidden rounded bg-gray-100 px-3 py-1 hover:bg-gray-400 hover:text-white"
+                  class="flex w-full cursor-pointer items-center justify-start overflow-hidden rounded bg-gray-100 px-3 py-2 hover:bg-gray-400 hover:text-white"
                 >
                   {{ note.title }}
                 </div>
                 <div class="mx-2 flex items-center justify-end">
                   <input
-                    v-model="selectedNotesCheckbox"
-                    :value="note"
+                    v-model="selectedNoteIds"
+                    :value="note.id"
                     type="checkbox"
                   />
                 </div>
@@ -202,20 +205,28 @@
             <button
               @click="addNote"
               v-show="selectedMode !== 'trash'"
-              class="mb-2 w-full rounded border-2 bg-yellow-500 py-3 font-semibold leading-none text-white hover:bg-yellow-400 focus:outline-none"
+              class="focus:outline-none w-full rounded border-2 bg-yellow-500 py-3 font-semibold leading-none text-white hover:bg-yellow-400"
             >
               Add
             </button>
             <button
+              :disabled="!selectedNoteIds.length"
               @click="restoreNote"
               v-show="selectedMode === 'trash'"
-              class="mb-2 w-full rounded border-2 bg-yellow-500 py-3 font-semibold leading-none text-white hover:bg-yellow-400 focus:outline-none"
+              :class="{
+                'cursor-not-allowed': !selectedNoteIds.length,
+              }"
+              class="focus:outline-none w-full rounded border-2 bg-yellow-500 py-3 font-semibold leading-none text-white hover:bg-yellow-400"
             >
               Restore
             </button>
             <button
-              class="mb-2 w-full rounded border-2 bg-gray-500 py-3 font-semibold leading-none text-white hover:bg-gray-400 focus:outline-none"
+              :disabled="!selectedNoteIds.length"
               @click="visibleNoteDelete"
+              :class="{
+                'cursor-not-allowed': !selectedNoteIds.length,
+              }"
+              class="focus:outline-none w-full rounded border-2 bg-gray-500 py-3 font-semibold leading-none text-white hover:bg-gray-400"
             >
               Delete
             </button>
@@ -224,14 +235,15 @@
       </div>
       <!-- Middle ends -->
       <!-- Right starts -->
-      <div class="px-4 md:col-span-1 lg:col-span-3">
-        <div class="flex-col">
+      <div class="h-full px-4 md:col-span-1 lg:col-span-3">
+        <div class="flex h-full flex-col justify-between">
           <div class="my-4 flex w-full">
             <input
-              class="flex w-full items-center justify-start rounded border-2 border-gray-100 bg-gray-100 px-3 py-3 text-sm leading-none focus:border-gray-400 focus:outline-none"
+              class="focus:outline-none flex w-full items-center justify-start rounded border-2 border-gray-100 bg-gray-100 px-3 py-3 text-sm leading-none focus:border-gray-400"
               type="text"
               placeholder="Title"
               v-model="currentTitle"
+              :disabled="selectedMode === 'trash'"
             />
             <span
               class="relative flex items-center justify-end px-3 text-gray-600"
@@ -267,6 +279,7 @@
                 </li>
                 <li
                   class="w-full cursor-pointer whitespace-nowrap py-2 px-2 text-sm hover:text-yellow-400"
+                  v-show="selectedMode !== 'trash'"
                   @click="visibleCategorySelect"
                 >
                   Change Category
@@ -274,18 +287,19 @@
               </ul>
             </span>
           </div>
-          <div class="my-4 h-80">
+          <div class="my-4 h-full">
             <textarea
               type="text"
               placeholder="Content"
               v-model="currentContent"
-              class="h-full w-full resize-none rounded border-2 border-gray-100 bg-gray-100 px-3 py-3 text-sm leading-none focus:border-gray-400 focus:outline-none"
+              :disabled="selectedMode === 'trash'"
+              class="focus:outline-none h-full w-full resize-none rounded border-2 border-gray-100 bg-gray-100 px-3 py-3 text-sm leading-none focus:border-gray-400"
             ></textarea>
           </div>
-          <div class="my-4">
+          <div v-show="selectedMode !== 'trash'" class="my-4">
             <button
               @click="editNote"
-              class="w-full rounded border-2 bg-yellow-500 py-3 font-semibold leading-none text-white hover:bg-yellow-400 focus:outline-none"
+              class="focus:outline-none w-full rounded border-2 bg-yellow-500 py-3 font-semibold leading-none text-white hover:bg-yellow-400"
             >
               Save
             </button>
@@ -333,6 +347,12 @@
       :header="'Delete Selected Notes'"
       :message="'Do you want to delete selected notes?'"
     />
+    <load-bar v-show="isVisibleLoadBar" />
+    <errors-alert
+      v-show="isVisibleErrors"
+      @close="closeErrors"
+      :errors="errors"
+    />
   </div>
 </template>
 
@@ -341,6 +361,20 @@ import HeaderPanel from "./HeaderPanel.vue";
 import EditModal from "../modals/EditModal.vue";
 import DeleteModal from "../modals/DeleteModal.vue";
 import SelectModal from "../modals/SelectModal.vue";
+import LoadBar from "../modals/LoadBar.vue";
+import ErrorsAlert from "../modals/ErrorsAlert.vue";
+import {
+  getUserCategories,
+  addCategory,
+  editCategory,
+  deleteCategory,
+  getUserNotes,
+  addNote,
+  editNote,
+  deleteNote,
+  restoreNote,
+  getDeletedUserNotes,
+} from "../api/api";
 
 export default {
   name: "MyNotes",
@@ -350,118 +384,72 @@ export default {
     EditModal,
     DeleteModal,
     SelectModal,
+    LoadBar,
+    ErrorsAlert,
   },
 
   data() {
     return {
-      // Temp
-      categoryIdCount: 4,
-      noteIdCount: 6,
-
       // Categories
-      // Temp
-      categories: [
-        {
-          id: 1,
-          title: "Category 1",
-          createdAt: new Date("2022-02-12"),
-          modifiedAt: new Date("2022-02-12"),
-        },
-        {
-          id: 2,
-          title: "Category 2",
-          createdAt: new Date("2022-02-12"),
-          modifiedAt: new Date("2022-02-12"),
-        },
-        {
-          id: 3,
-          title: "Category 3",
-          createdAt: new Date("2022-02-12"),
-          modifiedAt: new Date("2022-02-12"),
-        },
-        {
-          id: 4,
-          title: "Category 4",
-          createdAt: new Date("2022-02-12"),
-          modifiedAt: new Date("2022-02-12"),
-        },
-      ],
+      categories: [],
       selectedMode: "",
-      selectedCategory: null,
-      editedCategory: {},
-      deletedCategory: {},
+      selectedCategory: {
+        id: null,
+        title: null,
+        createdAt: null,
+        modifiedAt: null,
+      },
+      emptyCategory: {
+        id: null,
+        title: null,
+        createdAt: null,
+        modifiedAt: null,
+      },
+      editedCategory: {
+        id: null,
+        title: null,
+        createdAt: null,
+        modifiedAt: null,
+      },
+      deletedCategory: {
+        id: null,
+        title: null,
+        createdAt: null,
+        modifiedAt: null,
+      },
 
       // Notes
-      // Temp
-      notes: [
-        {
-          id: 1,
-          categoryId: 1,
-          title: "F",
-          content: "Text 1",
-          deletedAt: null,
-          createdAt: new Date("2021-02-12"),
-          modifiedAt: new Date("2022-02-12"),
-        },
-        {
-          id: 2,
-          categoryId: 1,
-          title: "D",
-          content: "Text 2",
-          deletedAt: null,
-          createdAt: new Date("2020-02-12"),
-          modifiedAt: new Date("2021-02-12"),
-        },
-        {
-          id: 3,
-          categoryId: 1,
-          title: "E",
-          content: "Text 3",
-          deletedAt: null,
-          createdAt: new Date("2019-02-12"),
-          modifiedAt: new Date("2020-02-12"),
-        },
-        {
-          id: 4,
-          categoryId: 4,
-          title: "C",
-          content: "Text 4",
-          deletedAt: null,
-          createdAt: new Date("2020-02-12"),
-          modifiedAt: new Date("2022-02-12"),
-        },
-        {
-          id: 5,
-          categoryId: null,
-          title: "A",
-          content: "Without Category",
-          deletedAt: null,
-          createdAt: new Date("2022-02-10"),
-          modifiedAt: new Date("2022-02-11"),
-        },
-        {
-          id: 6,
-          categoryId: null,
-          title: "B",
-          content: "Deleted",
-          deletedAt: new Date("2022-02-12"),
-          createdAt: new Date("2022-02-10"),
-          modifiedAt: new Date("2022-02-12"),
-        },
-      ],
-      selectedNote: null,
-      selectedNotesCheckbox: [],
-
-      // Filtering and sorting
-      filter: "",
-      sortParameter: "name",
-      sortReverse: false,
+      notes: [],
+      selectedNote: {
+        id: null,
+        categoryId: null,
+        title: null,
+        content: null,
+        deletedAt: null,
+        createdAt: null,
+        modifiedAt: null,
+      },
+      emptyNote: {
+        id: null,
+        categoryId: null,
+        title: null,
+        content: null,
+        deletedAt: null,
+        createdAt: null,
+        modifiedAt: null,
+      },
+      selectedNoteIds: [],
 
       // Note editing
       currentTitle: "",
       currentContent: "",
       currentCategoryId: null,
       currentCategoryTitle: null,
+
+      // Filtering and sorting
+      filter: "",
+      sortParameter: "name",
+      sortReverse: false,
 
       // Popup Visibility
       isVisibleDropdownSort: false,
@@ -471,7 +459,15 @@ export default {
       isVisibleCategoryEdit: false,
       isVisibleCategorySelect: false,
       isVisibleNoteDelete: false,
+      isVisibleLoadBar: false,
+      isVisibleErrors: false,
+
+      errors: [],
     };
+  },
+
+  mounted() {
+    this.getCategories();
   },
 
   computed: {
@@ -498,132 +494,202 @@ export default {
     },
 
     filteredNotes() {
-      return this.selectedNotes.filter((note) =>
+      return this.notes.filter((note) =>
         note.title.toLowerCase().includes(this.filter.toLowerCase())
       );
-    },
-
-    // Temp
-    selectedNotes() {
-      if (this.selectedMode === "all") {
-        return this.notes.filter((note) => note.deletedAt === null);
-      } else if (this.selectedMode === "trash") {
-        return this.notes.filter((note) => note.deletedAt !== null);
-      } else if (this.selectedCategory !== null) {
-        return this.notes.filter(
-          (note) =>
-            note.categoryId === this.selectedCategory.id &&
-            note.deletedAt === null
-        );
-      } else {
-        return [];
-      }
     },
   },
 
   methods: {
-    // Temp
+    getCategories() {
+      getUserCategories(
+        (data) => {
+          this.categories = data;
+        },
+        (e) => {
+          console.log(e);
+        }
+      );
+    },
+
     addCategory(title) {
-      this.categories.push({
-        id: ++this.categoryIdCount,
-        title: title,
-        createdAt: new Date(),
-        modifiedAt: new Date(),
-      });
+      addCategory(
+        { title: title },
+        (data) => {
+          this.categories.push(data);
+        },
+        (e) => {
+          this.showErrors(e);
+        }
+      );
       this.visibleCategoryAdd();
     },
 
-    // Temp
     editCategory(title) {
-      this.editedCategory.title = title;
+      editCategory(
+        this.editedCategory.id,
+        { title: title },
+        (data) => {
+          this.editedCategory.id = data.id;
+          this.editedCategory.title = data.title;
+          this.editedCategory.createdAt = data.createdAt;
+          this.editedCategory.modifiedAt = data.modifiedAt;
+        },
+        (e) => {
+          this.showErrors(e);
+        }
+      );
       this.visibleCategoryEdit();
     },
 
-    // Temp
     deleteCategory() {
-      this.categories = this.categories.filter(
-        (category) => category !== this.deletedCategory
+      deleteCategory(
+        this.deletedCategory.id,
+        (data) => {
+          this.categories = this.categories.filter(
+            (category) => category.id !== data.id
+          );
+          if (this.deletedCategory.id === this.selectedCategory.id) {
+            this.selectedMode = "";
+            this.selectedCategory = this.emptyCategory;
+            this.notes = [];
+          }
+        },
+        (e) => {
+          this.showErrors(e);
+        }
       );
       this.visibleCategoryDelete();
     },
 
-    // Temp
     selectCategory(mode, category) {
-      if (mode !== "categories") {
-        this.selectedMode = mode;
-        this.selectedCategory = null;
-        this.currentCategoryId = null;
-        this.currentCategoryTitle = null;
-      } else {
+      if (mode === "categories") {
         this.selectedMode = category.id;
         this.selectedCategory = category;
-        this.currentCategoryId = category.id;
-        this.currentCategoryTitle = category.title;
+        this.getNotes(this.selectedCategory.id);
+      } else {
+        this.selectedMode = mode;
+        this.selectedCategory = this.emptyCategory;
+        if (this.selectedMode === "all") {
+          this.getNotes(null);
+        } else if (this.selectedMode === "trash") {
+          this.getDeletedNotes();
+        }
       }
+    },
+
+    getNotes(categoryId) {
+      getUserNotes(
+        categoryId,
+        (data) => {
+          this.notes = data;
+        },
+        (e) => {
+          console.log(e);
+        }
+      );
+    },
+
+    getDeletedNotes() {
+      getDeletedUserNotes(
+        (data) => {
+          this.notes = data;
+        },
+        (e) => {
+          console.log(e);
+        }
+      );
     },
 
     addNote() {
-      this.currentTitle = "";
-      this.currentContent = "";
-      this.selectedNote = null;
+      this.selectedNote = this.emptyNote;
     },
 
-    // Temp
     editNote() {
-      if (this.selectedNote !== null) {
-        this.selectedNote.title = this.currentTitle;
-        this.selectedNote.content = this.currentContent;
-        this.selectedNote.categoryId = this.currentCategoryId;
+      if (this.selectedNote.id === this.emptyNote.id) {
+        addNote(
+          {
+            categoryId: this.currentCategoryId,
+            title: this.currentTitle,
+            content: this.currentContent,
+          },
+          (data) => {
+            this.currentTitle = "";
+            this.currentContent = "";
+            if (
+              this.selectedMode !== "" &&
+              (this.selectedMode === "all" ||
+                this.selectedCategory.id === data.categoryId)
+            ) {
+              this.notes.push(data);
+            }
+          },
+          (e) => {
+            this.showErrors(e);
+          }
+        );
       } else {
-        this.selectedNote = {
-          id: ++this.noteIdCount,
-          categoryId: this.currentCategoryId,
-          title: this.currentTitle,
-          content: this.currentContent,
-          deletedAt: null,
-          createdAt: new Date(),
-          modifiedAt: new Date(),
-        };
-        this.notes.push(this.selectedNote);
+        editNote(
+          this.selectedNote.id,
+          {
+            categoryId: this.currentCategoryId,
+            title: this.currentTitle,
+            content: this.currentContent,
+          },
+          (data) => {
+            this.selectedNote.id = data.id;
+            this.selectedNote.categoryId = data.categoryId;
+            this.selectedNote.title = data.title;
+            this.selectedNote.content = data.content;
+            this.selectedNote.deletedAt = data.deletedAt;
+            this.selectedNote.createdAt = data.createdAt;
+            this.selectedNote.modifiedAt = data.modifiedAt;
+            this.selectedNote = this.emptyNote;
+            if (
+              this.selectedMode !== "all" &&
+              this.selectedCategory.id !== data.categoryId
+            ) {
+              this.notes = this.notes.filter((note) => note.id !== data.id);
+            }
+          },
+          (e) => {
+            this.showErrors(e);
+          }
+        );
       }
     },
 
-    // Temp
     deleteNote() {
-      if (this.selectedMode === "trash") {
-        this.notes = this.notes.filter((note) => {
-          let i = 0;
-          while (i < this.selectedNotesCheckbox.length) {
-            if (note === this.selectedNotesCheckbox[i]) {
-              return false;
-            }
-            i++;
-          }
-          return true;
-        });
-      } else {
-        this.selectedNotesCheckbox.map((note) => (note.deletedAt = new Date()));
-      }
-      this.selectedNotesCheckbox = [];
+      deleteNote(
+        this.selectedNoteIds,
+        (data) => {
+          this.selectedNote = this.emptyNote;
+          this.notes = this.notes.filter((note) => note.id !== data.id);
+        },
+        (e) => {
+          this.showErrors(e);
+        }
+      );
+      this.selectedNoteIds = [];
       this.visibleNoteDelete();
+    },
+
+    restoreNote() {
+      restoreNote(
+        this.selectedNoteIds,
+        (data) => {
+          this.selectedNote = this.emptyNote;
+          this.notes = this.notes.filter((note) => note.id !== data.id);
+        },
+        (e) => {
+          this.showErrors(e);
+        }
+      );
+      this.selectedNoteIds = [];
     },
 
     selectNote(note) {
       this.selectedNote = note;
-      this.currentTitle = note.title;
-      this.currentContent = note.content;
-      this.currentCategoryId = note.categoryId;
-      const currentCategory = this.categories.find(
-        (category) => category.id === this.currentCategoryId
-      );
-      this.currentCategoryTitle =
-        currentCategory != undefined ? currentCategory.title : null;
-    },
-
-    // Temp
-    restoreNote() {
-      this.selectedNotesCheckbox.map((note) => (note.deletedAt = null));
-      this.selectedNotesCheckbox = [];
     },
 
     noteCategorySelect(selectedId, selectedTitle) {
@@ -665,17 +731,60 @@ export default {
     visibleNoteDelete() {
       this.isVisibleNoteDelete = !this.isVisibleNoteDelete;
     },
+
+    closeErrors() {
+      this.isVisibleErrors = false;
+      this.errors = [];
+    },
+
+    showErrors(e) {
+      if (e.response) {
+        for (let i = 0; i < e.response.data.length; i++) {
+          e.response.data[i] =
+            e.response.data[i].field.toUpperCase() +
+            ": " +
+            e.response.data[i].message;
+        }
+        this.errors = e.response.data;
+      } else if (e.request) {
+        this.errors = e.response.data;
+      } else {
+        this.errors = ["Unknown Error"];
+      }
+      this.isVisibleErrors = true;
+    },
   },
 
   watch: {
     selectedMode() {
-      this.selectedNotesCheckbox = [];
-      this.selectedNote = null;
-      this.currentTitle = "";
-      this.currentContent = "";
+      if (this.selectedCategory.id === this.emptyCategory.id) {
+        this.currentCategoryId = null;
+        this.currentCategoryTitle = null;
+      } else {
+        this.currentCategoryId = this.selectedCategory.id;
+        this.currentCategoryTitle = this.selectedCategory.title;
+      }
+      this.selectedNote = this.emptyNote;
+      this.selectedNoteIds = [];
       this.filter = "";
       this.sortParameter = "name";
       this.sortReverse = false;
+    },
+
+    selectedNote() {
+      if (this.selectedNote.id === this.emptyNote.id) {
+        this.currentTitle = "";
+        this.currentContent = "";
+      } else {
+        this.currentTitle = this.selectedNote.title;
+        this.currentContent = this.selectedNote.content;
+        this.currentCategoryId = this.selectedNote.categoryId;
+        const currentCategory = this.categories.find(
+          (category) => category.id === this.currentCategoryId
+        );
+        this.currentCategoryTitle =
+          currentCategory !== undefined ? currentCategory.title : null;
+      }
     },
   },
 };

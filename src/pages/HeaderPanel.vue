@@ -85,7 +85,14 @@ export default {
     },
 
     getUser() {
-      getCurrentUser((data) => (this.user = data));
+      getCurrentUser(
+        (data) => {
+          this.user = data;
+        },
+        (e) => {
+          console.log(e);
+        }
+      );
     },
 
     updateUser(updatedUser) {

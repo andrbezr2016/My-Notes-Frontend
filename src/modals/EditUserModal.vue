@@ -1,9 +1,9 @@
 <template>
   <div
-    class="fixed top-0 min-h-screen w-full bg-gray-700 bg-opacity-90 py-16 px-4"
+    class="outline-none fixed top-0 h-full w-full overflow-y-auto bg-gray-700 bg-opacity-90"
   >
     <div
-      class="m-auto w-full flex-col rounded bg-white px-10 pt-2 pb-10 shadow md:w-1/2 lg:w-1/3"
+      class="mx-auto rounded bg-white px-10 pt-2 pb-10 shadow md:mt-20 md:w-1/2 lg:mt-40 lg:w-1/3"
     >
       <div class="flex text-xl">
         <p class="flex w-full items-center justify-start py-4 leading-none">
@@ -36,7 +36,7 @@
         <input
           v-model="editedUser.username"
           type="text"
-          class="mt-2 w-full rounded border-2 bg-gray-200 py-3 px-3 text-sm font-semibold leading-none text-gray-800 focus:outline-none"
+          class="focus:outline-none mt-2 w-full rounded border-2 bg-gray-200 py-3 px-3 text-sm font-semibold leading-none text-gray-800"
         />
       </div>
       <div class="mt-2 w-full">
@@ -47,7 +47,7 @@
           disabled
           :value="currentUser.email"
           type="email"
-          class="mt-2 w-full rounded border-2 bg-gray-200 py-3 px-3 text-sm font-semibold leading-none text-gray-800 focus:outline-none"
+          class="focus:outline-none mt-2 w-full rounded border-2 bg-gray-200 py-3 px-3 text-sm font-semibold leading-none text-gray-800"
         />
       </div>
       <div class="mt-2 w-full">
@@ -58,7 +58,7 @@
           <input
             v-model="editedUser.password"
             :type="passwordVisible ? 'text' : 'password'"
-            class="mt-2 w-full rounded border-2 bg-gray-200 py-3 pl-3 pr-9 text-sm font-semibold leading-none text-gray-800 focus:outline-none"
+            class="focus:outline-none mt-2 w-full rounded border-2 bg-gray-200 py-3 pl-3 pr-9 text-sm font-semibold leading-none text-gray-800"
           />
           <div
             @click="showPassword"
@@ -82,7 +82,10 @@
           </div>
         </div>
       </div>
-      <div class="mt-8 w-full rounded bg-red-400 font-semibold text-white">
+      <div
+        v-show="errors.length"
+        class="mt-8 w-full overflow-hidden rounded bg-red-400 font-semibold text-white"
+      >
         <ul>
           <li v-for="(error, index) in errors" :key="index" class="p-2">
             {{ error }}
@@ -96,15 +99,36 @@
         <p class="p-2">Updated</p>
       </div>
       <div class="mt-8">
-        <button
-          @click="upload"
-          class="mt-2 w-full rounded border-2 bg-gray-500 py-4 font-semibold leading-none text-white hover:bg-gray-400 focus:outline-none"
+        <label
+          :class="{ 'bg-gray-200': icon !== null }"
+          class="focus:outline-none flex h-32 w-full flex-col rounded border-4 border-dashed hover:border-gray-400 hover:bg-gray-200"
         >
-          Upload profile picture
-        </button>
+          <div class="flex flex-col items-center justify-center pt-7">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-12 w-12 text-gray-400"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+              />
+            </svg>
+            <p class="pt-1 text-sm tracking-wider text-gray-400">
+              {{ icon !== null ? icon.name : "Select Profile Icon" }}
+            </p>
+          </div>
+          <input
+            type="file"
+            accept="image/jpeg"
+            ref="icon"
+            @change="upload"
+            class="opacity-0"
+          />
+        </label>
         <button
           @click="save"
-          class="mt-2 w-full rounded border-2 bg-yellow-500 py-4 font-semibold leading-none text-white hover:bg-yellow-400 focus:outline-none"
+          class="focus:outline-none mt-2 w-full rounded border-2 bg-yellow-500 py-4 font-semibold leading-none text-white hover:bg-yellow-400"
         >
           Save
         </button>
@@ -139,11 +163,12 @@ export default {
 
   methods: {
     close() {
+      this.$emit("close");
       this.editedUser.username = this.currentUser.username;
       this.editedUser.password = null;
+      this.icon = null;
       this.isUpdated = false;
       this.errors = [];
-      this.$emit("close");
     },
 
     showPassword() {
@@ -156,7 +181,8 @@ export default {
       }
       if (
         this.editedUser.username === this.currentUser.username &&
-        this.editedUser.password === null
+        this.editedUser.password === null &&
+        this.icon === null
       ) {
         this.isUpdated = false;
         this.errors = [];
@@ -178,7 +204,10 @@ export default {
       );
     },
 
-    upload() {},
+    upload() {
+      this.icon = this.$refs.icon.files[0];
+      this.$refs.icon.value = null;
+    },
 
     parseErrors(e) {
       if (e.response) {
@@ -201,6 +230,7 @@ export default {
     currentUser() {
       this.editedUser.username = this.currentUser.username;
       this.editedUser.password = null;
+      this.icon = null;
     },
   },
 };

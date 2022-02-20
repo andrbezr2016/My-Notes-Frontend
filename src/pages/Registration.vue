@@ -1,9 +1,7 @@
 <template>
   <div class="min-h-screen w-full bg-gray-700 py-16 px-4">
     <div class="flex flex-col items-center justify-center">
-      <div class="flex-col font-serif text-6xl font-bold text-white">
-        My Notes
-      </div>
+      <div class="font-serif text-6xl font-bold text-white">My Notes</div>
 
       <div
         class="mt-16 w-full rounded bg-white px-10 pt-2 pb-10 shadow md:w-1/2 lg:w-1/3"
@@ -31,7 +29,7 @@
           <input
             v-model="registrationRequest.username"
             type="text"
-            class="mt-2 w-full rounded border-2 bg-gray-200 py-3 px-3 text-sm font-semibold leading-none text-gray-800 focus:outline-none"
+            class="focus:outline-none mt-2 w-full rounded border-2 bg-gray-200 py-3 px-3 text-sm font-semibold leading-none text-gray-800"
           />
         </div>
         <div class="mt-2 w-full">
@@ -41,7 +39,7 @@
           <input
             v-model="registrationRequest.email"
             type="email"
-            class="mt-2 w-full rounded border-2 bg-gray-200 py-3 px-3 text-sm font-semibold leading-none text-gray-800 focus:outline-none"
+            class="focus:outline-none mt-2 w-full rounded border-2 bg-gray-200 py-3 px-3 text-sm font-semibold leading-none text-gray-800"
           />
         </div>
         <div class="mt-2 w-full">
@@ -52,7 +50,7 @@
             <input
               v-model="registrationRequest.password"
               :type="passwordVisible ? 'text' : 'password'"
-              class="mt-2 w-full rounded border-2 bg-gray-200 py-3 pl-3 pr-9 text-sm font-semibold leading-none text-gray-800 focus:outline-none"
+              class="focus:outline-none mt-2 w-full rounded border-2 bg-gray-200 py-3 pl-3 pr-9 text-sm font-semibold leading-none text-gray-800"
             />
             <div
               @click="showPassword"
@@ -76,7 +74,10 @@
             </div>
           </div>
         </div>
-        <div class="mt-8 w-full rounded bg-red-400 font-semibold text-white">
+        <div
+          v-show="errors.length"
+          class="mt-8 w-full overflow-hidden rounded bg-red-400 font-semibold text-white"
+        >
           <ul>
             <li v-for="(error, index) in errors" :key="index" class="p-2">
               {{ error }}
@@ -85,7 +86,7 @@
         </div>
         <div class="mt-8">
           <button
-            class="w-full rounded border-2 bg-yellow-500 py-4 text-xl font-semibold leading-none text-white hover:bg-yellow-400 focus:outline-none"
+            class="focus:outline-none w-full rounded border-2 bg-yellow-500 py-4 text-xl font-semibold leading-none text-white hover:bg-yellow-400"
             @click="register()"
           >
             Register

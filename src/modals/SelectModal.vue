@@ -1,9 +1,9 @@
 <template>
   <div
     @click="close"
-    class="fixed top-0 min-h-screen w-full bg-gray-700 bg-opacity-90 py-16 px-4"
+    class="outline-none fixed top-0 h-full w-full overflow-y-auto bg-gray-700 bg-opacity-90"
   >
-    <div @click.stop class="container mx-auto">
+    <div @click.stop class="container mx-auto mt-40">
       <div
         class="mx-auto my-6 mb-4 w-11/12 rounded-md bg-white py-4 px-4 shadow sm:px-10 sm:py-6 md:w-5/12"
       >
@@ -27,9 +27,9 @@
         <p>{{ message }}</p>
         <select
           v-model="selectedCategory"
-          class="my-3 w-full rounded border-2 bg-gray-200 px-2 py-2 text-sm leading-none focus:outline-none"
+          class="focus:outline-none my-3 w-full rounded border-2 bg-gray-200 px-2 py-2 text-sm leading-none"
         >
-          <option :value="noneCategory" class="text-gray-400">None</option>
+          <option :value="emptyCategory" class="text-gray-400">None</option>
           <option
             v-for="category in categories"
             :value="category"
@@ -40,13 +40,13 @@
         </select>
 
         <button
-          class="mt-2 w-full rounded border-2 bg-yellow-500 py-3 font-semibold leading-none text-white hover:bg-yellow-400 focus:outline-none"
+          class="focus:outline-none mt-2 w-full rounded border-2 bg-yellow-500 py-3 font-semibold leading-none text-white hover:bg-yellow-400"
           @click="ok"
         >
           Ok
         </button>
         <button
-          class="mt-2 w-full rounded border-2 bg-gray-500 py-3 font-semibold leading-none text-white hover:bg-gray-400 focus:outline-none"
+          class="focus:outline-none mt-2 w-full rounded border-2 bg-gray-500 py-3 font-semibold leading-none text-white hover:bg-gray-400"
           @click="close"
         >
           Cancel
@@ -68,7 +68,7 @@ export default {
         createdAt: null,
         modifiedAt: null,
       },
-      noneCategory: {
+      emptyCategory: {
         id: null,
         title: "None",
         createdAt: null,
@@ -88,12 +88,12 @@ export default {
   methods: {
     ok() {
       this.$emit("ok", this.selectedCategory.id, this.selectedCategory.title);
-      this.selectedCategory = null;
+      this.selectedCategory = this.emptyCategory;
     },
 
     close() {
       this.$emit("close");
-      this.selectedCategory = null;
+      this.selectedCategory = this.emptyCategory;
     },
   },
 };
