@@ -1,7 +1,7 @@
 # stage1 as builder
 FROM node:16-alpine as builder
 
-WORKDIR /vue-ui
+WORKDIR /app
 
 # Copy the package.json and install dependencies
 COPY package*.json ./
@@ -21,7 +21,7 @@ COPY ./.nginx/nginx.conf /etc/nginx/nginx.conf
 RUN rm -rf /usr/share/nginx/html/*
 
 # Copy from the stahg 1
-COPY --from=builder /vue-ui/dist /usr/share/nginx/html
+COPY --from=builder /app/dist /usr/share/nginx/html
 
 EXPOSE 8080
 ENTRYPOINT ["nginx", "-g", "daemon off;"]
