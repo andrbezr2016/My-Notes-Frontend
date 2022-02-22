@@ -15,3 +15,7 @@ export function removeToken() {
   sessionStorage.removeItem("accessToken");
   sessionStorage.removeItem("refreshToken");
 }
+
+export function isAuthenticated() {
+  return getAccessToken() && getRefreshToken();
+}

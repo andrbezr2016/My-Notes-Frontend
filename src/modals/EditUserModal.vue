@@ -99,6 +99,7 @@
         <p class="p-2">Updated</p>
       </div>
       <div class="mt-8">
+        <div class="p-2 text-gray-400">Max file size: 2MB</div>
         <label
           :class="{ 'bg-gray-200': icon !== null }"
           class="focus:outline-none flex h-32 w-full flex-col rounded border-4 border-dashed transition-colors hover:border-gray-400 hover:bg-gray-200"
@@ -210,18 +211,19 @@ export default {
     },
 
     parseErrors(e) {
+      this.errors = [];
       if (e.response) {
-        for (let i = 0; i < e.response.data.length; i++) {
-          e.response.data[i] =
-            e.response.data[i].field.toUpperCase() +
-            ": " +
-            e.response.data[i].message;
+        if (e.response.data.length) {
+          e.response.data.forEach((error) =>
+            this.errors.push(error.field.toUpperCase() + ": " + error.message)
+          );
+        } else {
+          this.errors = [e.response.data.message];
         }
-        this.errors = e.response.data;
       } else if (e.request) {
-        this.errors = e.response.data;
+        this.errors = [e.message];
       } else {
-        this.errors = ["Unknown Error"];
+        this.errors = [e.message];
       }
     },
   },

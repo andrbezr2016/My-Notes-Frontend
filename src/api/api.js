@@ -23,11 +23,11 @@ export const registration = async (data, okCallback, errorCallback) => {
   }
 };
 
-export const logout = async (finalCallback) => {
+export const logout = async (finalCallback, errorCallback) => {
   try {
     await axios.post(`/auth/logout`);
   } catch (e) {
-    return e;
+    return errorCallback(e);
   } finally {
     removeToken();
     finalCallback();

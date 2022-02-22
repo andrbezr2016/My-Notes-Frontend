@@ -1,10 +1,10 @@
 <template>
-  <nav class="flex h-20 bg-gray-800 text-white">
-    <div class="flex w-full flex-wrap justify-between px-4">
-      <div class="flex items-center font-serif text-2xl font-bold">
+  <nav class="z-10 h-auto w-full bg-gray-800 text-white shadow">
+    <div class="flex w-full flex-wrap justify-between">
+      <div class="flex items-center p-4 font-serif text-2xl font-bold">
         My Notes
       </div>
-      <div class="flex items-center">
+      <div class="flex items-center p-4">
         <div class="flex cursor-pointer items-center">
           <div
             class="flex items-center hover:text-yellow-400"
@@ -12,7 +12,11 @@
           >
             <img
               class="h-12 w-12 rounded-full object-cover"
-              src="../assets/icon.png"
+              :src="
+                user.icon === null
+                  ? require('@/assets/icon.png')
+                  : 'data:image/jpeg;base64,' + user.icon
+              "
               alt="avatar"
             />
             <p class="mx-3">{{ user.username }}</p>
@@ -39,7 +43,7 @@
   </nav>
 
   <edit-user-modal
-    class="z-10"
+    class="z-20"
     v-show="isVisibleUserEdit"
     @update="updateUser"
     @close="visibleUserEdit"
@@ -65,7 +69,7 @@ export default {
         id: null,
         username: "",
         email: "",
-        iconPath: null,
+        icon: null,
         createdAt: null,
         modifiedAt: null,
       },
@@ -75,13 +79,20 @@ export default {
     };
   },
 
+  emits: { showErrors: null },
+
   mounted() {
     this.getUser();
   },
 
   methods: {
     logout() {
-      logout(() => this.$router.push("/login"));
+      logout(
+        () => this.$router.push("/login"),
+        (e) => {
+          console.log(e);
+        }
+      );
     },
 
     getUser() {
@@ -90,7 +101,7 @@ export default {
           this.user = data;
         },
         (e) => {
-          console.log(e);
+          this.$emit("showErrors", e);
         }
       );
     },

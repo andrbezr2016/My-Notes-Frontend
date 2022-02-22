@@ -76,7 +76,7 @@
         </div>
         <div class="mt-8">
           <button
-            class="focus:outline-none w-full rounded border-2 bg-yellow-500 py-4 text-xl font-semibold leading-none text-white hover:bg-yellow-400"
+            class="focus:outline-none w-full rounded border-2 bg-yellow-500 py-4 text-xl font-semibold leading-none text-white transition-colors hover:bg-yellow-400"
             @click="login()"
           >
             Login
@@ -124,18 +124,19 @@ export default {
     },
 
     parseErrors(e) {
+      this.errors = [];
       if (e.response) {
-        for (let i = 0; i < e.response.data.length; i++) {
-          e.response.data[i] =
-            e.response.data[i].field.toUpperCase() +
-            ": " +
-            e.response.data[i].message;
+        if (e.response.data.length) {
+          e.response.data.forEach((error) =>
+            this.errors.push(error.field.toUpperCase() + ": " + error.message)
+          );
+        } else {
+          this.errors = [e.response.data.message];
         }
-        this.errors = e.response.data;
       } else if (e.request) {
-        this.errors = e.response.data;
+        this.errors = [e.message];
       } else {
-        this.errors = ["Unknown Error"];
+        this.errors = [e.message];
       }
     },
   },

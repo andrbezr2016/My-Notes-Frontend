@@ -3,7 +3,7 @@
     class="flex h-screen max-h-screen flex-col bg-white font-semibold text-gray-800"
   >
     <!-- Navigation starts -->
-    <header-panel></header-panel>
+    <header-panel @showErrors="parseErrors"></header-panel>
     <!-- Navigation ends -->
     <!-- Main starts -->
     <div class="grid h-full flex-grow gap-2 md:grid-cols-3 lg:grid-cols-5">
@@ -11,16 +11,60 @@
       <div class="h-full bg-gray-100 px-4 text-gray-600">
         <div class="my-8 flex flex-col">
           <div
-            class="focus:outline-none my-2 cursor-pointer leading-none hover:text-yellow-400 hover:underline"
+            class="focus:outline-none my-2 flex cursor-pointer leading-none hover:text-yellow-400 hover:underline"
             @click="selectCategory('all')"
             :class="{
               'text-yellow-400 underline': selectedMode === 'all',
             }"
           >
-            All Notes
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              fill="currentColor"
+              viewBox="0 0 512 512"
+              class="mr-2 flex items-center justify-start"
+            >
+              <path
+                d="M106.667,170.667h106.667c11.782,0,21.333-9.551,21.333-21.333c0-11.782-9.551-21.333-21.333-21.333H106.667 c-11.782,0-21.333,9.551-21.333,21.333C85.333,161.115,94.885,170.667,106.667,170.667z"
+              />
+              <path
+                d="M234.667,341.333c11.782,0,21.333-9.551,21.333-21.333s-9.551-21.333-21.333-21.333h-128 c-11.782,0-21.333,9.551-21.333,21.333s9.551,21.333,21.333,21.333H234.667z"
+              />
+              <path
+                d="M106.667,256h64c11.782,0,21.333-9.551,21.333-21.333c0-11.782-9.551-21.333-21.333-21.333h-64 c-11.782,0-21.333,9.551-21.333,21.333C85.333,246.449,94.885,256,106.667,256z"
+              />
+              <path
+                d="M277.333,170.667H320c11.782,0,21.333-9.551,21.333-21.333c0-11.782-9.551-21.333-21.333-21.333h-42.667 C265.551,128,256,137.551,256,149.333C256,161.115,265.551,170.667,277.333,170.667z"
+              />
+              <path
+                d="M320,298.667h-21.333c-11.782,0-21.333,9.551-21.333,21.333s9.551,21.333,21.333,21.333H320 c11.782,0,21.333-9.551,21.333-21.333S331.782,298.667,320,298.667z"
+              />
+              <path
+                d="M213.333,234.667c0,11.782,9.551,21.333,21.333,21.333H320c11.782,0,21.333-9.551,21.333-21.333 c0-11.782-9.551-21.333-21.333-21.333h-85.333C222.885,213.333,213.333,222.885,213.333,234.667z"
+              />
+              <path
+                d="M490.667,128h-64V64c0-11.782-9.551-21.333-21.333-21.333H234.667V21.333C234.667,9.551,225.115,0,213.333,0 C201.551,0,192,9.551,192,21.333v21.333H21.333C9.551,42.667,0,52.218,0,64v341.333c0,11.782,9.551,21.333,21.333,21.333h64v64 c0,11.782,9.551,21.333,21.333,21.333h384c11.782,0,21.333-9.551,21.333-21.333V149.333C512,137.551,502.449,128,490.667,128z M42.667,85.333H192c0,11.782,9.551,21.333,21.333,21.333c11.782,0,21.333-9.551,21.333-21.333H384v64V384H106.667h-64V85.333z M469.333,469.333H128v-42.667h277.333c11.782,0,21.333-9.551,21.333-21.333V170.667h42.667V469.333z"
+              />
+            </svg>
+            <div class="flex items-center justify-end">All Notes</div>
           </div>
           <hr class="my-4 bg-gray-400" />
-          <div class="focus:outline-none my-2 leading-none">Categories</div>
+          <div class="focus:outline-none my-2 flex leading-none">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              fill="currentColor"
+              viewBox="0 0 35.668 35.668"
+              class="mr-2 flex items-center justify-start"
+            >
+              <path
+                d="M33.168,5.667H2.5c-1.381,0-2.5-1.119-2.5-2.5s1.119-2.5,2.5-2.5h30.668c1.381,0,2.5,1.119,2.5,2.5 S34.549,5.667,33.168,5.667z M18.667,10.501c0-1.381-1.119-2.5-2.5-2.5H2.5c-1.381,0-2.5,1.119-2.5,2.5s1.119,2.5,2.5,2.5h13.667 C17.548,13.001,18.667,11.882,18.667,10.501z M35.668,17.833c0-1.381-1.119-2.5-2.5-2.5H2.5c-1.381,0-2.5,1.119-2.5,2.5 s1.119,2.5,2.5,2.5h30.668C34.549,20.333,35.668,19.214,35.668,17.833z M18.667,25.167c0-1.381-1.119-2.5-2.5-2.5H2.5 c-1.381,0-2.5,1.119-2.5,2.5s1.119,2.5,2.5,2.5h13.667C17.548,27.667,18.667,26.548,18.667,25.167z M35.668,32.501 c0-1.381-1.119-2.5-2.5-2.5H2.5c-1.381,0-2.5,1.119-2.5,2.5s1.119,2.5,2.5,2.5h30.668C34.549,35.001,35.668,33.882,35.668,32.501z"
+              />
+            </svg>
+            <div class="flex items-center justify-end">Categories</div>
+          </div>
           <div class="my-2 overflow-y-scroll">
             <ul class="max-h-80">
               <li
@@ -74,20 +118,47 @@
             </ul>
           </div>
           <div
-            class="focus:outline-none my-2 cursor-pointer leading-none hover:text-yellow-400 hover:underline"
+            class="focus:outline-none my-2 flex cursor-pointer leading-none hover:text-yellow-400 hover:underline"
             @click="visibleCategoryAdd"
           >
-            Add Category
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              fill="currentColor"
+              viewBox="0 0 60.364 60.364"
+              class="mr-2 flex items-center justify-start"
+            >
+              <path
+                d="M54.454,23.18l-18.609-0.002L35.844,5.91C35.845,2.646,33.198,0,29.934,0c-3.263,0-5.909,2.646-5.909,5.91v17.269 L5.91,23.178C2.646,23.179,0,25.825,0,29.088c0.002,3.264,2.646,5.909,5.91,5.909h18.115v19.457c0,3.267,2.646,5.91,5.91,5.91 c3.264,0,5.909-2.646,5.91-5.908V34.997h18.611c3.262,0,5.908-2.645,5.908-5.907C60.367,25.824,57.718,23.178,54.454,23.18z"
+              />
+            </svg>
+            <div class="flex items-center justify-end">Add Category</div>
           </div>
           <hr class="my-4 bg-gray-400" />
           <div
-            class="focus:outline-none my-2 cursor-pointer leading-none hover:text-yellow-400 hover:underline"
+            class="focus:outline-none my-2 flex cursor-pointer leading-none hover:text-yellow-400 hover:underline"
             @click="selectCategory('trash')"
             :class="{
               'text-yellow-400 underline': selectedMode === 'trash',
             }"
           >
-            Trash
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="18"
+              height="18"
+              fill="currentColor"
+              viewBox="0 0 330 330"
+              class="mr-2 flex items-center justify-start"
+            >
+              <path
+                d="M240,121.076V90h15c8.284,0,15-6.716,15-15s-6.716-15-15-15h-30h-15V15c0-8.284-6.716-15-15-15H75c-8.284,0-15,6.716-15,15 v45H45H15C6.716,60,0,66.716,0,75s6.716,15,15,15h15v185c0,8.284,6.716,15,15,15h60h37.596c19.246,24.347,49.031,40,82.404,40 c57.897,0,105-47.103,105-105C330,172.195,290.817,128.377,240,121.076z M90,30h90v30h-15h-60H90V30z M105,260H60V90h15h30h60h30 h15v31.076c-50.817,7.301-90,51.119-90,103.924c0,12.268,2.122,24.047,6.006,35H105z M225,300c-41.355,0-75-33.645-75-75 s33.645-75,75-75s75,33.645,75,75S266.355,300,225,300z"
+              />
+              <path
+                d="M256.819,193.181c-5.857-5.857-15.355-5.857-21.213,0L225,203.787l-10.606-10.606c-5.857-5.857-15.355-5.857-21.213,0 c-5.858,5.857-5.858,15.355,0,21.213L203.787,225l-10.606,10.606c-5.858,5.857-5.858,15.355,0,21.213 c2.929,2.929,6.768,4.394,10.606,4.394s7.678-1.465,10.606-4.394L225,246.213l10.606,10.606c2.929,2.929,6.768,4.394,10.606,4.394 s7.678-1.465,10.606-4.394c5.858-5.857,5.858-15.355,0-21.213L246.213,225l10.606-10.606 C262.678,208.536,262.678,199.038,256.819,193.181z"
+              />
+            </svg>
+            <div class="flex items-center justify-end">Trash</div>
           </div>
         </div>
       </div>
@@ -181,15 +252,31 @@
           </div>
           <div class="my-4 h-full max-h-full">
             <ul class="flex h-96 flex-col overflow-y-scroll text-sm">
-              <li v-for="note in sortedNotes" :key="note.id" class="m-1 flex">
+              <li
+                v-for="note in sortedNotes"
+                :key="note.id"
+                class="m-1 flex text-xs text-gray-400"
+              >
                 <div
                   @click="selectNote(note)"
                   :class="{
                     'bg-gray-400 text-white': selectedNote.id === note.id,
                   }"
-                  class="flex w-full cursor-pointer items-center justify-start overflow-hidden rounded bg-gray-100 px-3 py-2 hover:bg-gray-400 hover:text-white"
+                  class="flex w-full cursor-pointer flex-col items-start justify-start overflow-hidden rounded bg-gray-100 px-3 py-2 hover:bg-gray-400 hover:text-white"
                 >
-                  {{ note.title }}
+                  <label class="text-sm text-gray-800">{{ note.title }}</label>
+                  <p>
+                    Created at:
+                    {{ formatDate(note.createdAt) }}
+                  </p>
+                  <p>
+                    Modified at:
+                    {{ formatDate(note.modifiedAt) }}
+                  </p>
+                  <p v-if="selectedMode === 'trash'">
+                    Deleted at:
+                    {{ formatDate(note.deletedAt) }}
+                  </p>
                 </div>
                 <div class="mx-2 flex items-center justify-end">
                   <input
@@ -203,12 +290,19 @@
             </ul>
           </div>
           <div class="my-4">
+            <div v-show="selectedMode === 'trash'" class="p-2 text-gray-400">
+              Storage time: 7 days
+            </div>
             <button
-              @click="addNote"
+              :disabled="selectedNote.id === emptyNote.id"
+              @click="newNote"
               v-show="selectedMode !== 'trash'"
+              :class="{
+                'cursor-not-allowed': selectedNote.id === emptyNote.id,
+              }"
               class="focus:outline-none w-full rounded border-2 bg-yellow-500 py-3 font-semibold leading-none text-white transition-colors hover:bg-yellow-400"
             >
-              Add
+              New
             </button>
             <button
               :disabled="!selectedNoteIds.length"
@@ -348,7 +442,6 @@
       :header="'Delete Selected Notes'"
       :message="'Do you want to delete selected notes?'"
     />
-    <load-bar v-show="isVisibleLoadBar" />
     <errors-alert
       v-show="isVisibleErrors"
       @close="closeErrors"
@@ -362,7 +455,6 @@ import HeaderPanel from "./HeaderPanel.vue";
 import EditModal from "../modals/EditModal.vue";
 import DeleteModal from "../modals/DeleteModal.vue";
 import SelectModal from "../modals/SelectModal.vue";
-import LoadBar from "../modals/LoadBar.vue";
 import ErrorsAlert from "../modals/ErrorsAlert.vue";
 import {
   getUserCategories,
@@ -385,7 +477,6 @@ export default {
     EditModal,
     DeleteModal,
     SelectModal,
-    LoadBar,
     ErrorsAlert,
   },
 
@@ -460,9 +551,9 @@ export default {
       isVisibleCategoryEdit: false,
       isVisibleCategorySelect: false,
       isVisibleNoteDelete: false,
-      isVisibleLoadBar: false,
       isVisibleErrors: false,
 
+      //Errors
       errors: [],
     };
   },
@@ -483,11 +574,15 @@ export default {
           );
         case "creationDate":
           return [...this.filteredNotes].sort((a, b) =>
-            a.createdAt > b.createdAt ? direction : -direction
+            new Date(a.createdAt) > new Date(b.createdAt)
+              ? direction
+              : -direction
           );
         case "modificationDate":
           return [...this.filteredNotes].sort((a, b) =>
-            a.modifiedAt > b.modifiedAt ? direction : -direction
+            new Date(a.modifiedAt) > new Date(b.modifiedAt)
+              ? direction
+              : -direction
           );
         default:
           return this.filteredNotes;
@@ -508,7 +603,7 @@ export default {
           this.categories = data;
         },
         (e) => {
-          console.log(e);
+          this.parseErrors(e);
         }
       );
     },
@@ -520,7 +615,7 @@ export default {
           this.categories.push(data);
         },
         (e) => {
-          this.showErrors(e);
+          this.parseErrors(e);
         }
       );
       this.visibleCategoryAdd();
@@ -537,7 +632,7 @@ export default {
           this.editedCategory.modifiedAt = data.modifiedAt;
         },
         (e) => {
-          this.showErrors(e);
+          this.parseErrors(e);
         }
       );
       this.visibleCategoryEdit();
@@ -557,7 +652,7 @@ export default {
           }
         },
         (e) => {
-          this.showErrors(e);
+          this.parseErrors(e);
         }
       );
       this.visibleCategoryDelete();
@@ -586,7 +681,7 @@ export default {
           this.notes = data;
         },
         (e) => {
-          console.log(e);
+          this.parseErrors(e);
         }
       );
     },
@@ -597,12 +692,12 @@ export default {
           this.notes = data;
         },
         (e) => {
-          console.log(e);
+          this.parseErrors(e);
         }
       );
     },
 
-    addNote() {
+    newNote() {
       this.selectedNote = this.emptyNote;
     },
 
@@ -626,7 +721,7 @@ export default {
             }
           },
           (e) => {
-            this.showErrors(e);
+            this.parseErrors(e);
           }
         );
       } else {
@@ -654,7 +749,7 @@ export default {
             }
           },
           (e) => {
-            this.showErrors(e);
+            this.parseErrors(e);
           }
         );
       }
@@ -668,7 +763,7 @@ export default {
           this.notes = this.notes.filter((note) => note.id !== data.id);
         },
         (e) => {
-          this.showErrors(e);
+          this.parseErrors(e);
         }
       );
       this.selectedNoteIds = [];
@@ -683,7 +778,7 @@ export default {
           this.notes = this.notes.filter((note) => note.id !== data.id);
         },
         (e) => {
-          this.showErrors(e);
+          this.parseErrors(e);
         }
       );
       this.selectedNoteIds = [];
@@ -703,6 +798,25 @@ export default {
       this.sortReverse =
         this.sortParameter === parameter ? !this.sortReverse : false;
       this.sortParameter = parameter;
+    },
+
+    formatDate(value) {
+      const date = new Date(value);
+      let dd = date.getDate();
+      if (dd < 10) dd = "0" + dd;
+
+      let mm = date.getMonth() + 1;
+      if (mm < 10) mm = "0" + mm;
+
+      let yy = date.getFullYear() % 100;
+      if (yy < 10) yy = "0" + yy;
+
+      let hours = date.getHours();
+      if (hours < 10) hours = "0" + hours;
+
+      let minutes = date.getMinutes();
+      if (minutes < 10) minutes = "0" + minutes;
+      return dd + "." + mm + "." + yy + " " + hours + ":" + minutes;
     },
 
     visibleDropdownSort() {
@@ -738,21 +852,25 @@ export default {
       this.errors = [];
     },
 
-    showErrors(e) {
+    parseErrors(e) {
+      this.errors = [];
       if (e.response) {
-        for (let i = 0; i < e.response.data.length; i++) {
-          e.response.data[i] =
-            e.response.data[i].field.toUpperCase() +
-            ": " +
-            e.response.data[i].message;
+        if (e.response.data.length) {
+          e.response.data.forEach((error) =>
+            this.errors.push(error.field.toUpperCase() + ": " + error.message)
+          );
+        } else {
+          this.errors = [e.response.data.message];
         }
-        this.errors = e.response.data;
       } else if (e.request) {
-        this.errors = e.response.data;
+        this.errors = [e.message];
       } else {
-        this.errors = ["Unknown Error"];
+        this.errors = [e.message];
       }
       this.isVisibleErrors = true;
+      setTimeout(() => {
+        this.isVisibleErrors = false;
+      }, 5000);
     },
   },
 
