@@ -4,6 +4,7 @@ import { isAuthenticated } from "../storage";
 import Login from "../pages/Login.vue";
 import Registration from "../pages/Registration.vue";
 import Dashboard from "../pages/Dashboard.vue";
+import NotFound from "../pages/NotFound.vue";
 
 const ifNotAuthenticated = (to, from, next) => {
   if (!isAuthenticated()) {
@@ -46,6 +47,7 @@ const routes = [
     component: Registration,
     beforeEnter: ifNotAuthenticated,
   },
+  { path: "/:pathMatch(.*)*", name: "NotFound", component: NotFound },
 ];
 
 const router = createRouter({

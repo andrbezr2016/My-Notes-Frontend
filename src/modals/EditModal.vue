@@ -1,9 +1,8 @@
 <template>
   <div
-    @click="close"
     class="outline-none fixed top-0 h-full w-full overflow-y-auto bg-gray-700 bg-opacity-90"
   >
-    <div @click.stop class="container mx-auto mt-40">
+    <div class="container mx-auto mt-40">
       <div
         class="mx-auto my-6 mb-4 w-11/12 rounded-md bg-white py-4 px-4 shadow sm:px-10 sm:py-6 md:w-5/12"
       >
